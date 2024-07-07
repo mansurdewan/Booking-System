@@ -1,33 +1,36 @@
 import { Router } from "express";
 import auth from "../../middleware/auth";
 import validateRequest from "../../middleware/validateRequest";
-import { Booking } from "./booking.model";
 import { USER_ROLE } from "../user/user.constant";
 import bookingController from "./booking.controller";
-import { bookingSchema } from "./booking.validation";
+import {
+  bookingSchemaValidation,
+  updateBookingSchemaValidation,
+} from "./booking.validation";
 
-const bookigRoute = Router();
+const bookingRoute = Router();
 
-bookigRoute.post(
+bookingRoute.post(
   "/create-booking",
   auth(USER_ROLE.user),
-  validateRequest(bookingSchema),
+  validateRequest(bookingSchemaValidation),
   bookingController.createBookingController
 );
-bookigRoute.get(
+bookingRoute.get(
   "/bookings",
   auth(USER_ROLE.admin),
   bookingController.getAllBookingController
 );
-bookigRoute.get(
+bookingRoute.get(
   "/my-bookings",
   auth(USER_ROLE.user),
   bookingController.getAllUserBookingController
 );
-bookigRoute.put(
+bookingRoute.put(
   "/:id",
   auth(USER_ROLE.admin),
+  validateRequest(updateBookingSchemaValidation),
   bookingController.updateBookingController
 );
 
-export default bookigRoute;
+export default bookingRoute;

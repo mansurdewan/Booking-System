@@ -8,7 +8,7 @@ const UserNameSchema = new Schema({
 const AdminSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
   name: { type: UserNameSchema, required: true },
-  dateOfBirth: { type: Date },
+  dateOfBirth: { type: String },
   email: { type: String, required: true, unique: true },
   contactNo: { type: String, required: true },
   presentAddress: { type: String, required: true },

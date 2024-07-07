@@ -3,14 +3,14 @@ import { TBooking } from "./booking.interface";
 import { Booking } from "./booking.model";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
-
+import expres from "express";
 const inserBookingInDB = async (payload: TBooking, res: Response) => {
   const createdBookingData = await Booking.create(payload);
 
   sendResponse(res, {
     status: httpStatus.OK,
     success: true,
-    message: " Booking   successfully done",
+    message: " Booking   successfully created",
     data: createdBookingData,
   });
 };
@@ -34,25 +34,19 @@ const getAllUserBookingFromDB = async (res: Response) => {
 };
 const updateBookingFromDB = async (
   id: any,
-  payload: unknown,
+  payload: Partial<TBooking>,
   res: Response
 ) => {
-  const updatedBookingData = await Booking.findByIdAndUpdate(
-    id,
-    {
-      payload,
-    },
-    {
-      new: true,
-    }
-  );
+  const updatedBookingData = await Booking.findByIdAndUpdate(id, payload, {
+    new: true,
+  });
 
   sendResponse(res, {
     status: httpStatus.OK,
     success: true,
-    message: "All user booking retrived  successfully",
+    message: "room updated  successfully",
     data: updatedBookingData,
-  })
+  });
 };
 const bookingServices = {
   inserBookingInDB,

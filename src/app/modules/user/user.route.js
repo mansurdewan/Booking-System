@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = require("express");
+var user_controller_1 = require("./user.controller");
+var validateRequest_1 = require("../../middleware/validateRequest");
+var admin_validation_1 = require("../admin/admin.validation");
+var user_validation_1 = require("./user.validation");
+var userRoute = (0, express_1.Router)();
+userRoute.post("/create-admin", (0, validateRequest_1.default)(admin_validation_1.adminSchema), user_controller_1.default.createAdmin);
+userRoute.post("/create-user", (0, validateRequest_1.default)(user_validation_1.userSchema), user_controller_1.default.createUser);
+exports.default = userRoute;

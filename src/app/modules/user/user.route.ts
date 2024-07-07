@@ -1,19 +1,19 @@
 import { Router } from "express";
 import userController from "./user.controller";
 import validateRequest from "../../middleware/validateRequest";
-import { adminSchema } from "../admin/admin.validation";
-import { userSchema } from "./user.validation";
+import {  adminSchemaValidation } from "../admin/admin.validation";
+import { userSchemaValidation } from "./user.validation";
 
 const userRoute = Router();
 
 userRoute.post(
   "/create-admin",
-  validateRequest(adminSchema),
+  validateRequest(adminSchemaValidation),
   userController.createAdmin
 );
 userRoute.post(
   "/create-user",
-  validateRequest(userSchema),
+  validateRequest(userSchemaValidation),
   userController.createUser
 );
 export default userRoute;

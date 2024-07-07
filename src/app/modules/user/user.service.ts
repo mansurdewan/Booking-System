@@ -1,28 +1,15 @@
-import { Response } from "express";
 import { TAdmin } from "../admin/admin.interface";
-import { sendResponse } from "../../utils/sendResponse";
 import { AdminModel } from "../admin/admin.model";
-import httpStatus from "http-status";
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
 
-const insertAdminInfoInDB = async (payload: TAdmin, res: Response) => {
+const insertAdminInfoInDB = async (payload: TAdmin) => {
   const createdAdminData = await AdminModel.create(payload);
-  sendResponse(res, {
-    status: httpStatus.OK,
-    success: true,
-    message: "Admin created   successfully",
-    data: createdAdminData,
-  });
+  return createdAdminData;
 };
-const insertUserInfoInDB = async (payload: TUser, res: Response) => {
+const insertUserInfoInDB = async (payload: TUser) => {
   const createUserData = await User.create(payload);
-  sendResponse(res, {
-    status: httpStatus.OK,
-    success: true,
-    message: "User created   successfully",
-    data: createUserData,
-  });
+  return createUserData;
 };
 const userService = {
   insertAdminInfoInDB,

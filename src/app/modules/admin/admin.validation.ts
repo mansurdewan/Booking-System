@@ -3,22 +3,23 @@
 import { z } from "zod";
 import { Types } from "mongoose";
 
-const objectId = z.instanceof(Types.ObjectId);
-
 const userNameSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
 });
 
-export const adminSchema = z.object({
+export const adminSchemaValidation = z.object({
   id: z.string(),
-  user: objectId,
+  user: z.string({
+    invalid_type_error: "user id must be string",
+    required_error: "user is required",
+  }),
   name: userNameSchema,
-  dateOfBirth: z.optional(z.date()),
+  dateOfBirth: z.string().optional(),
   email: z.string().email(),
-  contactNo: z.string(),
+  contactNo: z.string().optional(),
   presentAddress: z.string(),
   permanentAddress: z.string(),
-  profileImg: z.optional(z.string()),
+  profileImg: z.string().optional(),
   isDeleted: z.boolean(),
 });

@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = require("express");
+var auth_1 = require("../../middleware/auth");
+var validateRequest_1 = require("../../middleware/validateRequest");
+var user_constant_1 = require("../user/user.constant");
+var booking_controller_1 = require("./booking.controller");
+var booking_validation_1 = require("./booking.validation");
+var bookigRoute = (0, express_1.Router)();
+bookigRoute.post("/create-booking", (0, auth_1.default)(user_constant_1.USER_ROLE.user), (0, validateRequest_1.default)(booking_validation_1.bookingSchema), booking_controller_1.default.createBookingController);
+bookigRoute.get("/bookings", (0, auth_1.default)(user_constant_1.USER_ROLE.admin), booking_controller_1.default.getAllBookingController);
+bookigRoute.get("/my-bookings", (0, auth_1.default)(user_constant_1.USER_ROLE.user), booking_controller_1.default.getAllUserBookingController);
+bookigRoute.put("/:id", (0, auth_1.default)(user_constant_1.USER_ROLE.admin), booking_controller_1.default.updateBookingController);
+exports.default = bookigRoute;

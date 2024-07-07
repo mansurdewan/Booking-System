@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = require("express");
+var room_controoler_1 = require("./room.controoler");
+var validateRequest_1 = require("../../middleware/validateRequest");
+var auth_1 = require("../../middleware/auth");
+var user_constant_1 = require("../user/user.constant");
+var room_validation_1 = require("./room.validation");
+var roomRoute = (0, express_1.Router)();
+roomRoute.post("/create-room", (0, auth_1.default)(user_constant_1.USER_ROLE.admin), (0, validateRequest_1.default)(room_validation_1.meetingRoomSchema), room_controoler_1.default.createRoom);
+roomRoute.get("/:id", (0, auth_1.default)(), (0, validateRequest_1.default)(room_validation_1.meetingRoomSchema), room_controoler_1.default.getSingleRoom);
+roomRoute.put("/:id", (0, auth_1.default)(user_constant_1.USER_ROLE.admin), (0, validateRequest_1.default)(room_validation_1.meetingRoomSchema), room_controoler_1.default.updateRoom);
+roomRoute.delete("/:id", (0, auth_1.default)(user_constant_1.USER_ROLE.admin), (0, validateRequest_1.default)(room_validation_1.meetingRoomSchema), room_controoler_1.default.deleteRoom);
+exports.default = roomRoute;

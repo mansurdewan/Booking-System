@@ -6,62 +6,42 @@ import bcrypt from "bcrypt";
 import httpStatus from "http-status";
 import jwt from "jsonwebtoken";
 import config from "../config/config";
-const inserUserInfoInDB = async (paylod: TUser, res: Response) => {
-  const userInfo = {
-    ...paylod,
-  };
-  bcrypt.genSalt(12, function (err, salt) {
-    bcrypt.hash(paylod.password, salt, function (err, hashedpasseord) {
-      if (err) {
-        throw new Error("Password did not hashed");
-      }
-      // Store hash in your password DB.
-      userInfo.password = hashedpasseord;
-    });
-  });
-
-  const data = await User.create(userInfo);
-
-  sendResponse(res, {
-    status: httpStatus.OK,
-    success: true,
-    message: "sign-up  succesfully done!",
-    data: data,
-  });
+import { TAuthLogin } from "./auth.interface";
+const inserUserInfoInDB = async (payload: TUser) => {
+  const salt = await bcrypt.genSalt(12);
+  const hashedPassword = await bcrypt.hash(payload.password, salt);
+  payload.password = hashedPassword;
+  const data = await User.create(payload);
+  return data;
 };
 
-const authenticUserLogin = async (req: Request, res: Response) => {
-  const { loginInfo } = req.body;
+const authenticUserLogin = async (payload: TAuthLogin) => {
   //checking if the user is  logged-in
 
-  const isExitsUser = await User.find({ email: loginInfo.email });
+  const isExitsUser = await User.findOne({ email: payload.email });
   if (!isExitsUser) {
     throw new Error("user does not exits");
   }
   // checking if the password  does not match
-  bcrypt.compare(
-    loginInfo.password,
-    isExitsUser.password,
-    function (err, result) {
-      if (err) {
-        throw new Error("Password does not  match");
-      }
+  try {
+    const isVerifiedPassword = await bcrypt.compare(
+      payload.password,
+      isExitsUser.password
+    );
+    if (!isVerifiedPassword) {
+      console.log(isVerifiedPassword);
+      throw new Error("Password dont match");
     }
-  );
+  } catch (error) {
+    console.log(error);
+  }
 
   const token = jwt.sign(
-    { name: "athik", address: "chnadpur" },
-    config.jwt_secret,
+    { role: "user", address: "chnadpur" },
+    config.jwt_secret as string,
     { expiresIn: "10d" }
   );
-
-  res.status(httpStatus.OK).json({
-    status: 200,
-    success: true,
-    message: "Successfully log-in done!",
-    token,
-    data: isExitsUser,
-  });
+  return { token, isExitsUser };
 };
 
 const authServices = {
